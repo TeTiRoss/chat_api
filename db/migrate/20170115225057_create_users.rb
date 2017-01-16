@@ -3,7 +3,7 @@ class CreateUsers < ActiveRecord::Migration[5.0]
     create_table :users do |t|
       t.string :name
       t.string :password_digest
-      t.integer :messages_sent
+      t.integer :messages_count, default: 0
 
       t.timestamps
     end
