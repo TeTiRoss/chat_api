@@ -3,6 +3,6 @@ Rails.application.routes.draw do
 
   resources :users
   resources :chats do
-    resources :messages
+    resources :messages, only: [:index, :create]
   end
 end

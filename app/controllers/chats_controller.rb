@@ -12,7 +12,7 @@ class ChatsController < ApplicationController
   def create
     @chat = Chat.new(chat_params)
     if @chat.save
-      render :show, status: :created, location: @chat
+      render :show, status: :created
     else
       render json: @chat.errors, status: :unprocessable_entity
     end
