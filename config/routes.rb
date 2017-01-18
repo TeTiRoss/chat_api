@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   resources :sessions, only: :create
   resources :users
   resources :chats do
-    resources :messages, only: [:index, :create]
+    put 'read', on: :member
+    resources :messages, only: [:index, :create] do
+      get 'unread', on: :collection
+    end
   end
 end

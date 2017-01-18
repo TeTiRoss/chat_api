@@ -4,20 +4,21 @@ class Message < ApplicationRecord
 
   validates :content, presence: true
 
-  after_create :increment_sent_messages, :increment_unread_messages
+  after_create :increment_user_messages_count, :read_by_creator
 
   delegate :name, to: :user, prefix: true
   delegate :id, to: :chat, prefix: true
   delegate :id, to: :user, prefix: true
 
+  acts_as_readable on: :created_at
+
   private
-    def increment_sent_messages
-      User.increment_counter(:messages_count, user)
+
+    def increment_user_messages_count
+      User.increment_counter(:messages_count, self.user)
     end
 
-    def increment_unread_messages
-      chat.chats_users.where.not(user_id: user.id).each do |chats_user|
-        ChatsUser.increment_counter(:unread_messages, chats_user)
-      end
+    def read_by_creator
+      self.mark_as_read! for: self.user
     end
 end

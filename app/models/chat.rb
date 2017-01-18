@@ -6,9 +6,7 @@ class Chat < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :users, length: { minimum: 2 }
 
-  def clear_unread_messages(user)
-    chats_user = chats_users.find_by(user_id: user.id)
-    chats_user.unread_messages = 0
-    chats_user.save
+  def set_as_read(user)
+    self.messages.mark_as_read! :all, for: user
   end
 end

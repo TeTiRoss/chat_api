@@ -1,6 +1,6 @@
 class ChatsController < ApplicationController
 
-  before_action :set_chat, only: [:show, :update, :destroy]
+  before_action :set_chat, only: [:read, :show, :update, :destroy]
 
   def index
     @chats = @current_user.chats
@@ -30,6 +30,11 @@ class ChatsController < ApplicationController
 
   def destroy
     @chat.destroy
+  end
+
+  def read
+    @chat.set_as_read(@current_user)
+    head :ok
   end
 
   private

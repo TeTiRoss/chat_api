@@ -3,8 +3,9 @@ class MessagesController < ApplicationController
   before_action :set_chat
 
   def index
-    @chat.clear_unread_messages(@current_user)
     @messages = @chat.messages
+    @chat.set_as_read(@current_user)
+    render 'messages'
   end
 
   def create
@@ -14,6 +15,11 @@ class MessagesController < ApplicationController
     else
       render json: @message.errors, status: :unprocessable_entity
     end
+  end
+
+  def unread
+    @messages = @chat.messages.unread_by(@current_user)
+    render 'messages'
   end
 
   private

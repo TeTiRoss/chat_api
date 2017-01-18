@@ -10,9 +10,12 @@ class User < ApplicationRecord
 
   has_secure_password
 
+  acts_as_reader
+
   private
+
     def set_auth_token
-      return if auth_token.present?
+      return if self.auth_token.present?
       self.auth_token = generate_auth_token
     end
 

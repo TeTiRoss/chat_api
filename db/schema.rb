@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170115225452) do
+ActiveRecord::Schema.define(version: 20170118211900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,9 +24,8 @@ ActiveRecord::Schema.define(version: 20170115225452) do
   create_table "chats_users", force: :cascade do |t|
     t.integer  "chat_id"
     t.integer  "user_id"
-    t.integer  "unread_messages", default: 0
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["chat_id"], name: "index_chats_users_on_chat_id", using: :btree
     t.index ["user_id"], name: "index_chats_users_on_user_id", using: :btree
   end
@@ -38,7 +37,17 @@ ActiveRecord::Schema.define(version: 20170115225452) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["chat_id"], name: "index_messages_on_chat_id", using: :btree
+    t.index ["created_at"], name: "index_messages_on_created_at", using: :btree
     t.index ["user_id"], name: "index_messages_on_user_id", using: :btree
+  end
+
+  create_table "read_marks", force: :cascade do |t|
+    t.string   "readable_type", null: false
+    t.integer  "readable_id"
+    t.string   "reader_type",   null: false
+    t.integer  "reader_id"
+    t.datetime "timestamp"
+    t.index ["reader_id", "reader_type", "readable_type", "readable_id"], name: "read_marks_reader_readable_index", unique: true, using: :btree
   end
 
   create_table "users", force: :cascade do |t|
