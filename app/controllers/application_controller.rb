@@ -1,17 +1,13 @@
 class ApplicationController < ActionController::API
-  before_action :check_chat_user
+  include ActionController::HttpAuthentication::Token::ControllerMethods
+
+  before_action :authenticate_user!
 
   private
 
-    def current_user
-      User.first
-    end
-
-    def check_chat_user
-      chat = params[:chat_id] ? Chat.find(params[:chat_id]) : Chat.find(params[:id])
-      unless chat.users.include?(current_user)
-        render json: { errors: 'You dont have access to this chat' },
-          status: :forbidden
+    def authenticate_user!
+      authenticate_or_request_with_http_token do |token, options|
+        @current_user = User.find_by(auth_token: token)
       end
     end
 end

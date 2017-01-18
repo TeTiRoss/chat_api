@@ -1,13 +1,14 @@
 class MessagesController < ApplicationController
+
   before_action :set_chat
 
   def index
-    @chat.clear_unread_messages(current_user)
+    @chat.clear_unread_messages(@current_user)
     @messages = @chat.messages
   end
 
   def create
-    @message = @chat.messages.new(message_params.merge(user: current_user))
+    @message = @chat.messages.new(message_params.merge(user: @current_user))
     if @message.save
       render :show, status: :created
     else
