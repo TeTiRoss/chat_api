@@ -1,10 +1,11 @@
 module ApiHelper
   def get_token(user)
-    post '/sessions', params: { name: user.name, password: user.password }
+    user = FactoryGirl.create(:user)
+    post '/sessions',
+      params: { user: { name: user.name, password: user.password },
+        format: :json }
 
-    json = JSON.parse(response.body)
-
-    json[:user][:token]
+    json['user']['token']
   end
 
   def json

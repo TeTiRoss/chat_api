@@ -1,12 +1,12 @@
 FactoryGirl.define do
   factory :user do
-    name 'Ross'
+    sequence(:name) { |n| "Name #{n}" }
     password 'verysecurepassword'
     password_confirmation 'verysecurepassword'
   end
 
   factory :chat do
-    name 'Share'
+    sequence(:name) { |n| "Chat #{n}" }
   end
 
   factory :chats_user do

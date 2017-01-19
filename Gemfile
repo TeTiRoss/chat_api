@@ -42,6 +42,7 @@ group :development, :test do
   gem 'factory_girl_rails', require: false
   # Rails rspec matchers
   gem 'shoulda-matchers', '~> 2.8.0'
+  gem 'shoulda-callback-matchers', '~> 1.1.1'
   # Ensure a clean state for testing
   gem 'database_cleaner', '~> 1.4.1', require: false
 end
