@@ -20,6 +20,7 @@
 require 'factory_girl_rails'
 require 'database_cleaner'
 require 'support/database_cleaner'
+require 'support/api_helper'
 
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate
