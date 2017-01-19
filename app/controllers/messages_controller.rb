@@ -1,6 +1,6 @@
 class MessagesController < ApplicationController
 
-  before_action :set_chat
+  before_action :set_chat, :validate_access
 
   def index
     @messages = @chat.messages

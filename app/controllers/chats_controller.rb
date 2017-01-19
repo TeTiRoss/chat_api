@@ -1,6 +1,7 @@
 class ChatsController < ApplicationController
 
   before_action :set_chat, only: [:read, :show, :update, :destroy]
+  before_action :validate_access, except: [:index, :create]
 
   def index
     @chats = @current_user.chats
