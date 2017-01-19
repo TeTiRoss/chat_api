@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 describe 'Users API' do
   context 'create user' do
     it 'with all required fields' do
@@ -38,25 +40,24 @@ describe 'Users API' do
   end
 
   context 'show info with authorize user' do
-    before(:each) do
-      allow_any_instance_of(UsersController)
-        .to receive(:authenticate_user!).and_return(true)
-    end
+    let!(:user) { FactoryGirl.create(:user) }
 
     it 'about all users' do
       FactoryGirl.create_list(:user, 10)
-      get '/users', params: { format: :json }
+      get '/users', params: { format: :json },
+        headers: {'Authorization': "Token token=#{user.auth_token}"}
 
       expect(response.status).to eq(200)
 
-      expect(json.size).to eq(10)
+      expect(json.size).to eq(11)
       expect(json[0]['user']['auth_token']).to eq(nil)
     end
 
     it 'about certain user' do
       user = FactoryGirl.create(:user, name: 'Oliver')
 
-      get "/users/#{user.id}", params: { format: :json }
+      get "/users/#{user.id}", params: { format: :json },
+        headers: {'Authorization': "Token token=#{user.auth_token}"}
 
       expect(response.status).to eq(200)
 
@@ -78,6 +79,57 @@ describe 'Users API' do
       get "/users/#{user.id}", params: { format: :json }
 
       expect(response.status).to eq(401)
+    end
+  end
+
+  context 'existing user' do
+    let!(:user) { FactoryGirl.create(:user) }
+
+    context 'edit' do
+      it 'without token' do
+        put "/users/#{user.id}"
+        expect(response.status).to eq(401)
+      end
+
+      it 'without access rights' do
+        john = FactoryGirl.create(:user)
+        put "/users/#{user.id}",
+          headers: {'Authorization': "Token token=#{john.auth_token}"}
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'successfully' do
+        put "/users/#{user.id}",
+          params: { user: { name: 'Nick' }, format: :json },
+          headers: {'Authorization': "Token token=#{user.auth_token}"}
+
+        expect(response.status).to eq(200)
+
+        expect(json['user']['name']).to eq('Nick')
+      end
+    end
+
+    context 'delete' do
+      it 'without token' do
+        delete "/users/#{user.id}"
+        expect(response.status).to eq(401)
+      end
+
+      it 'without access rights' do
+        john = FactoryGirl.create(:user)
+        delete "/users/#{user.id}",
+          headers: {'Authorization': "Token token=#{john.auth_token}"}
+
+        expect(response.status).to eq(403)
+      end
+
+      it 'successfully' do
+        delete "/users/#{user.id}",
+          headers: {'Authorization': "Token token=#{user.auth_token}"}
+
+        expect(response.status).to eq(204)
+      end
     end
   end
 end

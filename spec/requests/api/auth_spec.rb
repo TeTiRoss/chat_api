@@ -1,3 +1,5 @@
+require 'rails_helper'
+
 describe 'Authentication API' do
   let!(:user) { FactoryGirl.create(:user) }
 
@@ -13,7 +15,8 @@ describe 'Authentication API' do
 
   context 'access data' do
     it 'with token' do
-      get '/users', params: { format: :json }, headers: {'Authorization': "Token token=#{get_token(user)}"}
+      get '/users', params: { format: :json },
+        headers: {'Authorization': "Token token=#{user.auth_token}"}
 
       expect(response.status).to eq(200)
     end
